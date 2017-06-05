@@ -13,7 +13,12 @@ def base():
 @pytest.mark.parametrize("user", [('user_a', 0.07),
                                   ('user_b', 0.04)])
 def test_get_similares(base, user):
-    assert user in base.get_similares('user_c')
+    assert user in base.get_similares('user_c').items()
+
+
+@pytest.mark.parametrize("user", ["user_a", "user_b", "user_c"])
+def test_list_all_users(base, user):
+    assert user in base.all_users()
 
 
 def test_more_similar(base):
@@ -33,3 +38,8 @@ def test_get_all_movieis_available(base):
 
 def test_movies_not_seen(base):
     assert "c" and "e" in base.movies_not_seen("user_c")
+
+
+@pytest.mark.parametrize("movie", ["c", "e"])
+def test_who_saw_movie_not_seen(base, movie):
+    assert "user_a" and "user_b" in base.who_saw_movie_not_seen("user_c")[movie]
