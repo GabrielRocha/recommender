@@ -16,3 +16,11 @@ class Recomendacao:
 
     def more_similar(self, user):
         return max(self.get_similares(user), key=lambda x: x[1])
+
+    def get_all_movieis_available(self):
+        return {movie
+                for user in self.base
+                for movie in self.base[user]}
+
+    def movies_not_seen(self, user):
+        return list(self.get_all_movieis_available() - set(list(self.base[user].keys())))
