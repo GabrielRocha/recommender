@@ -40,6 +40,26 @@ def test_movies_not_seen(base):
     assert "c" and "e" in base.movies_not_seen("user_c")
 
 
-@pytest.mark.parametrize("movie", ["c", "e"])
-def test_who_saw_movie_not_seen(base, movie):
-    assert "user_a" and "user_b" in base.who_saw_movie_not_seen("user_c")[movie]
+@pytest.mark.parametrize("user", [dict(name="user_a",
+                                       similarity=0.07,
+                                       vote=3,
+                                       movie="c"),
+                                   dict(name="user_b",
+                                        similarity=0.04,
+                                        vote=3,
+                                        movie="e")])
+def test_who_saw_movie_not_seen(base, user):
+    users_saw_movie = base.who_saw_movie_not_seen("user_c")
+    assert len(users_saw_movie) == 2
+    assert user['name'] in users_saw_movie
+    assert user['similarity'] == users_saw_movie[user['name']]["similarity"]
+    assert user["movie"] in users_saw_movie[user['name']]['movies']
+    assert user["vote"] == users_saw_movie[user['name']]['movies'][user["movie"]]
+
+
+def test_total_similarity_with_who_saw_movie_not_seen(base):
+    similarity = base.total_similarity_with_who_saw_movie_not_seen('user_c')
+    assert similarity['e']['sum_similarity'] == 0.04
+    assert similarity['e']['sum_review'] == 0.12
+    assert similarity['c']['sum_similarity'] == 0.07
+    assert float("{:.2f}".format(similarity['c']['sum_review'])) == 0.21

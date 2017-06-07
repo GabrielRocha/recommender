@@ -1,5 +1,6 @@
 import json
 from . import statistics
+from collections import defaultdict
 
 
 class Recomendacao:
@@ -11,8 +12,8 @@ class Recomendacao:
             self.base = json.loads(base_file.read())
 
     def get_similares(self, user):
-        return {other_user: statistics.degree_of_similarity(self.base[user], self.base[other_user])
-                for other_user in self.base if other_user != user}
+        return {user_of_base: statistics.degree_of_similarity(self.base[user], self.base[user_of_base])
+                for user_of_base in self.base if user_of_base != user}
 
     def more_similar(self, user):
         return max(self.get_similares(user).items(), key=lambda x: x[1])
@@ -27,5 +28,21 @@ class Recomendacao:
         return list(self.get_all_movieis_available() - set(list(self.base[user].keys())))
 
     def who_saw_movie_not_seen(self, user):
-            return {movie: [_user for _user in self.base if movie in self.base[_user]]
-                    for movie in self.movies_not_seen(user)}
+        return {user_of_base: {"similarity": statistics.degree_of_similarity(self.base[user],
+                                                                             self.base[user_of_base]),
+                               "movies": {movie: self.base[user_of_base][movie]
+                                          for movie in self.movies_not_seen(user)
+                                          if movie in self.base[user_of_base]}}
+                for user_of_base in self.base
+                if user_of_base != user}
+
+    def total_similarity_with_who_saw_movie_not_seen(self, user):
+        who_have_seen = self.who_saw_movie_not_seen(user)
+        statics_similarity = {}
+        for user_have_seen, statics in who_have_seen.items():
+            for movie in statics['movies']:
+                if movie not in statics_similarity:
+                    statics_similarity[movie] = defaultdict(float)
+                statics_similarity[movie]['sum_similarity'] += statics['similarity']
+                statics_similarity[movie]['sum_review'] += statics['movies'][movie] * statics['similarity']
+        return statics_similarity
