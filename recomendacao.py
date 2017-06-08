@@ -46,3 +46,7 @@ class Recomendacao:
                 statics_similarity[movie]['sum_similarity'] += statics['similarity']
                 statics_similarity[movie]['sum_review'] += statics['movies'][movie] * statics['similarity']
         return statics_similarity
+
+    def predict_movie_review(self, user):
+        return ((movie, round(statics['sum_review']/statics['sum_similarity'], 2))
+                for movie, statics in self.total_similarity_with_who_saw_movie_not_seen(user).items())
