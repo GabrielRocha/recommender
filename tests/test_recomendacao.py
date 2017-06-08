@@ -23,16 +23,17 @@ def test_list_all_users(recomendacao, user):
 
 def test_more_similar(recomendacao):
     user_similar, distance = recomendacao.more_similar('user_a')
+    print(user_similar, distance)
     assert user_similar == "user_c"
     assert distance, 13.45
 
 
-@pytest.mark.parametrize("movie",["a", "b", "c", "d", "e"])
+@pytest.mark.parametrize("movie", ["a", "b", "c", "d", "e"])
 def test_get_all_movieis_available(recomendacao, movie):
     assert movie in recomendacao.get_all_movieis_available()
 
 
-def test_get_all_movieis_available(recomendacao):
+def test_total_movieis_available(recomendacao):
     assert len(recomendacao.get_all_movieis_available()) == 5
 
 
@@ -44,10 +45,10 @@ def test_movies_not_seen(recomendacao):
                                        similarity=0.07,
                                        vote=3,
                                        movie="c"),
-                                   dict(name="user_b",
-                                        similarity=0.04,
-                                        vote=3,
-                                        movie="e")])
+                                  dict(name="user_b",
+                                       similarity=0.04,
+                                       vote=3,
+                                       movie="e")])
 def test_who_saw_movie_not_seen(recomendacao, user):
     users_saw_movie = recomendacao.who_saw_movie_not_seen("user_c")
     assert len(users_saw_movie) == 2
@@ -55,6 +56,10 @@ def test_who_saw_movie_not_seen(recomendacao, user):
     assert user['similarity'] == users_saw_movie[user['name']]["similarity"]
     assert user["movie"] in users_saw_movie[user['name']]['movies']
     assert user["vote"] == users_saw_movie[user['name']]['movies'][user["movie"]]
+
+
+def test_who_saw_movie_not_seen_not_contains_user(recomendacao):
+    assert "user_d" not in recomendacao.who_saw_movie_not_seen("user_c")
 
 
 def test_total_similarity_with_who_saw_movie_not_seen(recomendacao):

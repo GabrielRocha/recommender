@@ -28,13 +28,18 @@ class Recomendacao:
         return list(self.get_all_movieis_available() - set(list(self.base[user].keys())))
 
     def who_saw_movie_not_seen(self, user):
-        return {user_of_base: {"similarity": statistics.degree_of_similarity(self.base[user],
-                                                                             self.base[user_of_base]),
-                               "movies": {movie: self.base[user_of_base][movie]
-                                          for movie in self.movies_not_seen(user)
-                                          if movie in self.base[user_of_base]}}
-                for user_of_base in self.base
-                if user_of_base != user}
+        who_saw = {}
+        for user_of_base in self.base:
+            if user_of_base == user:
+                continue
+            similarity = statistics.degree_of_similarity(self.base[user], self.base[user_of_base])
+            if similarity <= 0:
+                continue
+            who_saw[user_of_base] = {"similarity": similarity,
+                                     "movies": {movie: self.base[user_of_base][movie]
+                                                for movie in self.movies_not_seen(user)
+                                                if movie in self.base[user_of_base]}}
+        return who_saw
 
     def total_similarity_with_who_saw_movie_not_seen(self, user):
         who_have_seen = self.who_saw_movie_not_seen(user)
