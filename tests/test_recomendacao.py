@@ -1,5 +1,6 @@
-from Code.recomendacao import Recomendacao
+from Code.recomendacao import Recomendacao, from_json
 import pytest
+import json
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -7,7 +8,12 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 @pytest.fixture
 def recomendacao():
-    return Recomendacao(BASE_DIR+"/base.txt")
+    return from_json(BASE_DIR+"/base.txt")
+
+
+def test_from_json():
+    assert isinstance(from_json(BASE_DIR+"/base.txt"), Recomendacao)
+    assert json.loads(json.dumps(from_json(BASE_DIR+"/base.txt").base))
 
 
 @pytest.mark.parametrize("user", [('user_a', 0.07),

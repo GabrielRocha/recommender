@@ -1,15 +1,17 @@
-import json
 from . import statistics
 from collections import defaultdict
+import json
+
+
+def from_json(json_file):
+    with open(json_file, "r") as base_file:
+        return Recomendacao(json.loads(base_file.read()))
+
 
 
 class Recomendacao:
     def __init__(self, base):
-        self._load_file(base)
-
-    def _load_file(self, base):
-        with open(base, "r") as base_file:
-            self.base = json.loads(base_file.read())
+        self.base = base
 
     def get_similares(self, user):
         return {user_of_base: statistics.degree_of_similarity(self.base[user], self.base[user_of_base])
