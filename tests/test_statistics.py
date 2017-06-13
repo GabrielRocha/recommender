@@ -1,4 +1,4 @@
-from Code import statistics
+import statistics
 
 
 def test_euclidean_distance():

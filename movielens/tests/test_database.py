@@ -1,4 +1,4 @@
-from Code.movielens.database import get_movies, get_reviews, duplicates_movies
+from movielens.database import get_movies, get_reviews, duplicates_movies
 import pytest
 
 

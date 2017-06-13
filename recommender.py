@@ -1,19 +1,19 @@
-from . import statistics
+import statistics
 from collections import defaultdict
 import json
-from .movielens import database
+from movielens import database
 
 
 def from_json(json_file):
     with open(json_file, "r") as base_file:
-        return Recomendacao(json.loads(base_file.read()))
+        return Analysis(json.loads(base_file.read()))
 
 
 def from_movielens():
-    return Recomendacao(database.get_reviews())
+    return Analysis(database.get_reviews())
 
 
-class Recomendacao:
+class Analysis:
     def __init__(self, base):
         self.base = base
 
