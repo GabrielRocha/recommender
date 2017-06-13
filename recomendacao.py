@@ -1,12 +1,16 @@
 from . import statistics
 from collections import defaultdict
 import json
+from .movielens import database
 
 
 def from_json(json_file):
     with open(json_file, "r") as base_file:
         return Recomendacao(json.loads(base_file.read()))
 
+
+def from_movielens():
+    return Recomendacao(database.get_reviews())
 
 
 class Recomendacao:
@@ -23,11 +27,11 @@ class Recomendacao:
     def all_users(self):
         return [user for user in self.base]
 
-    def get_all_movieis_available(self):
+    def all_movieis_available(self):
         return {movie for user in self.base for movie in self.base[user]}
 
     def movies_not_seen(self, user):
-        return list(self.get_all_movieis_available() - set(list(self.base[user].keys())))
+        return list(self.all_movieis_available() - set(list(self.base[user].keys())))
 
     def who_saw_movie_not_seen(self, user):
         who_saw = {}
@@ -54,6 +58,7 @@ class Recomendacao:
                 statics_similarity[movie]['sum_review'] += statics['movies'][movie] * statics['similarity']
         return statics_similarity
 
-    def predict_movie_review(self, user):
-        return ((movie, round(statics['sum_review']/statics['sum_similarity'], 2))
-                for movie, statics in self.total_similarity_with_who_saw_movie_not_seen(user).items())
+    def predict_movie_review(self, user, how_many=3):
+        movies = [(movie, round(statics['sum_review']/statics['sum_similarity'], 2))
+                  for movie, statics in self.total_similarity_with_who_saw_movie_not_seen(user).items()]
+        return sorted(movies, key=lambda x: x[1], reverse=True)[:how_many]

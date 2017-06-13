@@ -1,4 +1,5 @@
-from Code.recomendacao import Recomendacao, from_json
+from Code.movielens.database import get_reviews
+from Code.recomendacao import Recomendacao, from_json, from_movielens
 import pytest
 import json
 import os
@@ -36,11 +37,11 @@ def test_more_similar(recomendacao):
 
 @pytest.mark.parametrize("movie", ["a", "b", "c", "d", "e"])
 def test_get_all_movieis_available(recomendacao, movie):
-    assert movie in recomendacao.get_all_movieis_available()
+    assert movie in recomendacao.all_movieis_available()
 
 
 def test_total_movieis_available(recomendacao):
-    assert len(recomendacao.get_all_movieis_available()) == 5
+    assert len(recomendacao.all_movieis_available()) == 5
 
 
 def test_movies_not_seen(recomendacao):
@@ -80,3 +81,8 @@ def test_total_similarity_with_who_saw_movie_not_seen(recomendacao):
                                    ('e', 3)])
 def test_predict_movie_review(recomendacao, movie):
     assert movie in recomendacao.predict_movie_review('user_c')
+
+
+def test_from_movielens():
+    movielens = from_movielens()
+    assert movielens.base == get_reviews()
