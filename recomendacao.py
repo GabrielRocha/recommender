@@ -14,11 +14,11 @@ class Recomendacao:
         self.base = base
 
     def get_similares(self, user):
-        return {user_of_base: statistics.degree_of_similarity(self.base[user], self.base[user_of_base])
-                for user_of_base in self.base if user_of_base != user}
+        return ((user_of_base, statistics.degree_of_similarity(self.base[user], self.base[user_of_base]))
+                for user_of_base in self.base if user_of_base != user)
 
     def more_similar(self, user):
-        return max(self.get_similares(user).items(), key=lambda x: x[1])
+        return max(self.get_similares(user), key=lambda x: x[1])
 
     def all_users(self):
         return [user for user in self.base]

@@ -19,7 +19,7 @@ def test_from_json():
 @pytest.mark.parametrize("user", [('user_a', 0.07),
                                   ('user_b', 0.04)])
 def test_get_similares(recomendacao, user):
-    assert user in recomendacao.get_similares('user_c').items()
+    assert user in recomendacao.get_similares('user_c')
 
 
 @pytest.mark.parametrize("user", ["user_a", "user_b", "user_c"])
