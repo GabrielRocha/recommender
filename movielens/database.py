@@ -1,3 +1,4 @@
+from collections import Counter
 import os
 
 
@@ -23,12 +24,6 @@ def get_reviews():
 
 
 def duplicates_movies():
-    unique_movies = set()
-    duplicate_movies = set()
-    for id, title in get_movies().items():
-        if title in unique_movies:
-            duplicate_movies.add(title)
-        else:
-            unique_movies.add(title)
-    return duplicate_movies
+    count_title = Counter(get_movies().values())
+    return (title for title in count_title if count_title[title] > 1)
 
