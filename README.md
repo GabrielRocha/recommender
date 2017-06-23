@@ -31,7 +31,7 @@ Utilizar bibliotecas que já realizam todas essas tarefas de forma mais simples 
 * [Pandas](http://pandas.pydata.org/)
     * Para leitura dos dados(json, csv, xls,....)
 * [Sckit-lean](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.euclidean_distances.html)
-    * Calcular distancia euclidiana
+    * Calcular distância euclidiana
 
 # Link
 https://www.udemy.com/inteligencia-artificial-sistemas-de-recomendacao-em-python/
