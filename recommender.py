@@ -47,18 +47,18 @@ class Analysis:
                                                 if movie in self.base[user_of_base]}}
         return who_saw
 
-    def total_similarity_with_who_saw_movie_not_seen(self, user):
+    def similarity_movies_not_seen(self, user):
         who_have_seen = self.who_saw_movie_not_seen(user)
         statics_similarity = {}
         for user_have_seen, statics in who_have_seen.items():
             for movie in statics['movies']:
                 if movie not in statics_similarity:
                     statics_similarity[movie] = defaultdict(float)
-                statics_similarity[movie]['sum_similarity'] += statics['similarity']
-                statics_similarity[movie]['sum_review'] += statics['movies'][movie] * statics['similarity']
+                statics_similarity[movie]['sum_similarity_users'] += statics['similarity']
+                statics_similarity[movie]['sum_review_users'] += statics['movies'][movie] * statics['similarity']
         return statics_similarity
 
     def predict_movie_review(self, user, how_many=3):
-        movies = [(movie, round(statics['sum_review']/statics['sum_similarity'], 2))
-                  for movie, statics in self.total_similarity_with_who_saw_movie_not_seen(user).items()]
+        movies = [(movie, round(statics['sum_review_users']/statics['sum_similarity_users'], 2))
+                  for movie, statics in self.similarity_movies_not_seen(user).items()]
         return sorted(movies, key=lambda x: x[1], reverse=True)[:how_many]

@@ -70,11 +70,11 @@ def test_who_saw_movie_not_seen_not_contains_user(analysis):
 
 
 def test_total_similarity_with_who_saw_movie_not_seen(analysis):
-    similarity = analysis.total_similarity_with_who_saw_movie_not_seen('user_c')
-    assert similarity['e']['sum_similarity'] == 0.04
-    assert similarity['e']['sum_review'] == 0.12
-    assert similarity['c']['sum_similarity'] == 0.07
-    assert float("{:.2f}".format(similarity['c']['sum_review'])) == 0.21
+    similarity = analysis.similarity_movies_not_seen('user_c')
+    assert similarity['e']['sum_similarity_users'] == 0.04
+    assert similarity['e']['sum_review_users'] == 0.12
+    assert similarity['c']['sum_similarity_users'] == 0.07
+    assert float("{:.2f}".format(similarity['c']['sum_review_users'])) == 0.21
 
 
 @pytest.mark.parametrize("movie", [('c', 3),
